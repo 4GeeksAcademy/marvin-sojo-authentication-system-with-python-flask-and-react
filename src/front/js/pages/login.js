@@ -3,7 +3,7 @@ import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { Link } from "react-router-dom";
 
-export const Home = () => {
+export const Login = () => {
   const { store, actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,9 +49,6 @@ export const Home = () => {
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
-          <hr className="my-3"></hr>
-            do you have an account? <Link to="/login"><span className="">click here</span>
-          </Link>
         </div>
       </form>
     </div>
