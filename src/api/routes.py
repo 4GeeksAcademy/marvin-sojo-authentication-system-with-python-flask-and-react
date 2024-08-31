@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 
 api = Blueprint('api', __name__)
@@ -44,3 +45,21 @@ def signup():
     except Exception as error:
         db.session.rollback()
         return jsonify({"error": f"{error}"}), 500
+
+@api.route("/signin", methods=["POST"])
+def signin():
+    body = request.json
+    email = body.get("email", None)
+    password = body.get("password", None)
+    if email is None or password is None:
+        return jsonify({"error": "Email and password required"}), 400
+    
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+    
+    if not check_password_hash(user.password, password):
+        return jsonify({"error": "Error while loggin in"})
+    
+    user_token = create_access_token({"id": user.id, "email": user.email})
+    return jsonify({"token": user_token})

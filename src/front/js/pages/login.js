@@ -1,23 +1,27 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const { store, actions } = useContext(Context);
+  const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmitRegister = async (e) => {
-    e.preventDefault();
-    const response = await actions.register(email, password);
-    console.log(response);
-    if (response) {
+    e.preventDefault();    
+    const response = await actions.login(email, password)
+    if(response){
+      navigate("/dashboard")
     }
   };
+  
+
 
   return (
     <div className="mt-5">
+      <h2 className="text-center">Login</h2>
       <form className="container card" onSubmit={handleSubmitRegister}>
         <div className="card-body">
           <div className="mb-3">
